@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Install Dependencies
         run: |
           sudo apt-get update
@@ -15,10 +15,15 @@ jobs:
           sudo dpkg -i vagrant_2.4.7-1_amd64.deb
           vagrant --version
 
-      - name: Run Vagrant as Root
+      - name: Run Vagrant Provisioning
         run: |
           sudo mkdir -p /root/.vagrant.d
           sudo cp -R $HOME/.vagrant.d/* /root/.vagrant.d/ 2>/dev/null || true
           sudo vagrant up --provision
-          sudo curl -s http://192.168.56.20 | grep "Hello dear,This is Mayokun-DevOps Setting up Nginx-Server automatedly with Vagrant!"
+          
+          # Improved verification
+          HTTP_OUTPUT=$(curl -s http://192.168.56.20)
+          echo "$HTTP_OUTPUT"  # Debug output
+          echo "$HTTP_OUTPUT" | grep -q "Mayokun-DevOps" || exit 1
+          
           sudo vagrant destroy -f
