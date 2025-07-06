@@ -20,5 +20,5 @@ jobs:
           sudo mkdir -p /root/.vagrant.d
           sudo cp -R $HOME/.vagrant.d/* /root/.vagrant.d/ 2>/dev/null || true
           sudo vagrant up --provision
-          sudo curl -s http://192.168.56.20 | grep ""Hello dear,This is Mayokun-DevOps Setting up Nginx-Server automatedly with Vagrant!"
+          sudo curl -s http://192.168.56.20 | grep "Hello dear,This is Mayokun-DevOps Setting up Nginx-Server automatedly with Vagrant!"
           sudo vagrant destroy -f
