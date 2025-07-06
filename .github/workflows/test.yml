@@ -1,17 +1,20 @@
 name: Test Vagrant Automation
-on: [push, pull_request]  # Triggers on push/PR
+on: [push, pull_request]
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04  # Explicitly use Ubuntu 24.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install Vagrant and VirtualBox
+      - name: Install Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y vagrant virtualbox
+          sudo apt-get install -y virtualbox wget
+          wget https://releases.hashicorp.com/vagrant/2.4.0/vagrant_2.4.0-1_amd64.deb
+          sudo dpkg -i vagrant_2.4.0-1_amd64.deb
+          vagrant --version  # Verify installation
 
       - name: Start Vagrant and Test Provisioning
         run: |
