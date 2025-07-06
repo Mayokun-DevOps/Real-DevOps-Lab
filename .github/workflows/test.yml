@@ -1,0 +1,20 @@
+name: Test Vagrant Automation
+on: [push, pull_request]  # Triggers on push/PR
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Vagrant and VirtualBox
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y vagrant virtualbox
+
+      - name: Start Vagrant and Test Provisioning
+        run: |
+          vagrant up --provision
+          curl -s http://192.168.56.20 | grep "Hello dear,This is Mayokun-DevOps Setting up Nginx-Server automatedly with Vagrant!"  # Verify Nginx
+          vagrant destroy -f  # Cleanup
