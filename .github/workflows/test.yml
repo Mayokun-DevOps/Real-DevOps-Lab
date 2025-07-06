@@ -3,21 +3,22 @@ on: [push, pull_request]
 
 jobs:
   test:
-    runs-on: ubuntu-24.04  # Explicitly use Ubuntu 24.04
+    runs-on: ubuntu-24.04
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
+      
       - name: Install Dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y virtualbox wget
-          wget https://releases.hashicorp.com/vagrant/2.4.0/vagrant_2.4.0-1_amd64.deb
-          sudo dpkg -i vagrant_2.4.0-1_amd64.deb
-          vagrant --version  # Verify installation
+          wget https://releases.hashicorp.com/vagrant/2.4.7/vagrant_2.4.7-1_amd64.deb
+          sudo dpkg -i vagrant_2.4.7-1_amd64.deb
+          vagrant --version
 
-      - name: Start Vagrant and Test Provisioning
+      - name: Run Vagrant as Root
         run: |
-          vagrant up --provision
-          curl -s http://192.168.56.20 | grep "Hello dear,This is Mayokun-DevOps Setting up Nginx-Server automatedly with Vagrant!"  # Verify Nginx
-          vagrant destroy -f  # Cleanup
+          sudo mkdir -p /root/.vagrant.d
+          sudo cp -R $HOME/.vagrant.d/* /root/.vagrant.d/ 2>/dev/null || true
+          sudo vagrant up --provision
+          sudo curl -s http://192.168.56.20 | grep ""Hello dear,This is Mayokun-DevOps Setting up Nginx-Server automatedly with Vagrant!"
+          sudo vagrant destroy -f
